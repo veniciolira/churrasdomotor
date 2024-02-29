@@ -31,12 +31,22 @@ def gerarGrafViolenciaPib():
     fig = px.scatter(dados, x='rendapercapita', y='cvli', hover_data=['municipio'])
     return render_template('grafviolenciapib.html', plot=fig.to_html())
 
+
 @app.route('/grafcorrelacao')
 def gerarGrafCorrelacao():
     dados = da.lerdados()
     fig2 = da.exibirmapacorrelacoes(dados)
 
     return render_template('grafcorrelacao.html', mapa=fig2.to_html())
+@app.route('/melhoresedu')
+def exibirmunicipiosedu():
+    data = da.lerdados()
+
+    data['somaedu'] = data['idebanosiniciais'] + data['idebanosfinais']
+    data.sort_values(by=['somaedu'], ascending=False, inplace=True)
+    fig = da.exibirgraficobarraseduc(data.head(15))
+
+    return render_template('melhoresedu.html', figura=fig.to_html())
 
 
 @app.route('/menu')
